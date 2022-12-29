@@ -16,29 +16,9 @@ import {
     Textarea,
     Center,
 } from '@chakra-ui/react';
+import { motion } from 'framer-motion';
 
-const avatars = [
-    {
-        name: 'Ryan Florence',
-        url: 'https://bit.ly/ryan-florence',
-    },
-    {
-        name: 'Segun Adebayo',
-        url: 'https://bit.ly/sage-adebayo',
-    },
-    {
-        name: 'Kent Dodds',
-        url: 'https://bit.ly/kent-c-dodds',
-    },
-    {
-        name: 'Prosper Otemuyiwa',
-        url: 'https://bit.ly/prosper-baba',
-    },
-    {
-        name: 'Christian Nwamba',
-        url: 'https://bit.ly/code-beast',
-    },
-];
+const MotionBox = motion(Box);
 
 export default function UploadVideo() {
     return (
@@ -68,7 +48,9 @@ export default function UploadVideo() {
                     rounded={'xl'}
                     p={{ base: 4, sm: 6, md: 8 }}
                     spacing={{ base: 8 }}
-                    maxW={{ lg: 'lg' }}>
+                    maxW={{ lg: 'lg' }}
+                    zIndex={2}
+                >
                     <Stack spacing={4}>
                         <Heading
                             color={'gray.800'}
@@ -146,12 +128,16 @@ export default function UploadVideo() {
                     form
                 </Stack>
             </Container>
-            <Blur
+            <MotionBox
+                animate={{ rotate: 360 }}
+                transition={{ repeat: Infinity, duration: 10 }} maxW={['300px', 'xs']}
                 position={'absolute'}
-                top={-10}
-                left={-10}
+                top={-20}
+                left={-20}
                 style={{ filter: 'blur(70px)' }}
-            />
+            >
+                <Blur />
+            </MotionBox>
         </Box>
     );
 }
