@@ -74,7 +74,7 @@ export default function UploadVideo() {
                             color={'gray.800'}
                             lineHeight={1.1}
                             fontSize={{ base: '2xl', sm: '3xl', md: '4xl' }}>
-                            Upload an video
+                            Upload a video
                             <Text
                                 as={'span'}
                                 bgGradient="linear(to-r, red.400,pink.400)"
