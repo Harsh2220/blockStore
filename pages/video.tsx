@@ -15,6 +15,10 @@ import {
     Icon,
     Textarea,
     Center,
+    Switch,
+    FormControl,
+    FormLabel,
+    HStack,
 } from '@chakra-ui/react';
 import { motion } from 'framer-motion';
 
@@ -44,7 +48,7 @@ export default function UploadVideo() {
                     </Heading>
                 </Stack>
                 <Stack
-                    bg={'gray.50'}
+                    bg={'gray.200'}
                     rounded={'xl'}
                     p={{ base: 4, sm: 6, md: 8 }}
                     spacing={{ base: 8 }}
@@ -80,15 +84,53 @@ export default function UploadVideo() {
                                     color: 'gray.500',
                                 }}
                             />
-                            <Textarea
-                                placeholder="Description"
+                            <FormControl display='flex' alignItems='center' gap={8}>
+                                <HStack>
+                                    <FormLabel mb='0' color={'black'}>
+                                        Enable duration?
+                                    </FormLabel>
+                                    <Switch size={'md'} />
+                                </HStack>
+                                <HStack>
+                                    <FormLabel mb='0' color={'black'}>
+                                        Enable supply?
+                                    </FormLabel>
+                                    <Switch size={'md'} />
+                                </HStack>
+                            </FormControl>
+                            <Flex gap={8}>
+                                <Input
+                                    placeholder="duration"
+                                    bg={'gray.100'}
+                                    border={0}
+                                    color={'gray.500'}
+                                    _placeholder={{
+                                        color: 'gray.500',
+                                    }}
+                                    type='number'
+                                />
+                                <Input
+                                    placeholder="supply"
+                                    bg={'gray.100'}
+                                    border={0}
+                                    color={'gray.500'}
+                                    _placeholder={{
+                                        color: 'gray.500',
+                                    }}
+                                    type='number'
+                                />
+                            </Flex>
+                            <Input
+                                placeholder="Price"
                                 bg={'gray.100'}
                                 border={0}
                                 color={'gray.500'}
                                 _placeholder={{
                                     color: 'gray.500',
                                 }}
+                                type='number'
                             />
+
                             <Center w="full">
                                 <label
                                     htmlFor="video"
