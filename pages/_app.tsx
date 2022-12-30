@@ -4,7 +4,7 @@ import theme from '../styles/theme'
 import { createReactClient, LivepeerConfig, studioProvider } from '@livepeer/react';
 
 const client = createReactClient({
-  provider: studioProvider({ apiKey: 'enter your api' }),
+  provider: studioProvider({ apiKey: 'c8d436ea-0f8b-495b-bec3-967a2a399e85'}),
 });
 
 export default function App({ Component, pageProps }: AppProps) {

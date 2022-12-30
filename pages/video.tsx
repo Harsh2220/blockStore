@@ -16,11 +16,33 @@ import {
     Textarea,
     Center,
 } from '@chakra-ui/react';
+import { useCreateAsset } from "@livepeer/react";
+import { useEffect, useState } from "react";
 import { motion } from 'framer-motion';
 
 const MotionBox = motion(Box);
 
 export default function UploadVideo() {
+    const [playbackID, setplaybackID] = useState();
+  
+
+    const [video, setVideo] = useState<File | undefined>(undefined);
+    const {
+        mutate: createAsset,
+        data: assets,
+        status,
+        progress,
+        error,
+    } = useCreateAsset(
+        // we use a `const` assertion here to provide better Typescript types
+        // for the returned data
+        video
+            ? {
+                sources: [{ name: video.name, file: video }] as const,
+            }
+            : null,
+    );
+console.log(progress);
     return (
         <Box position={'relative'}>
             <Container
@@ -108,6 +130,11 @@ export default function UploadVideo() {
                                 <input
                                     type="file"
                                     id="video"
+                                    onChange={(e) => {
+                                        if (e.target.files) {
+                                            setVideo(e.target.files[0]);
+                                        }
+                                    }}
                                     style={{ display: "none" }}
                                 />
                             </Center>
@@ -118,6 +145,10 @@ export default function UploadVideo() {
                             w={'full'}
                             bgGradient="linear(to-r, red.400,pink.400)"
                             color={'white'}
+                            disabled={status === 'loading' || !createAsset}
+                            onClick={() => {
+                                createAsset?.();
+                            }}
                             _hover={{
                                 bgGradient: 'linear(to-r, red.400,pink.400)',
                                 boxShadow: 'xl',
