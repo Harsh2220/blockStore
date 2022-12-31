@@ -32,9 +32,9 @@ import {
   usePrepareContractWrite,
 } from "wagmi";
 
-const lockInterface = new ethers.utils.Interface(PublicLockV11.abi);
-
 export default function UploadVideo() {
+  const lockInterface = new ethers.utils.Interface(PublicLockV11.abi);
+
   const { address: creator } = useAccount();
   const [calldata, setCalldata] = useState("");
   const [name, setName] = useState("");
@@ -57,8 +57,8 @@ export default function UploadVideo() {
     // for the returned data
     video
       ? {
-        sources: [{ name: video.name, file: video }] as const,
-      }
+          sources: [{ name: video.name, file: video }] as const,
+        }
       : null
   );
 
@@ -123,12 +123,14 @@ export default function UploadVideo() {
 
   async function getPost() {
     // console.log(res.doc);
-    let { data, error } = await orbis.getPosts(
-      { tag: "Test Tag" }
-    );
+    let { data, error } = await orbis.getPosts({ tag: "Test Tag" });
     console.log(data);
   }
-  async function createPost(name: string, playbackId: string | undefined, description: string) {
+  async function createPost(
+    name: string,
+    playbackId: string | undefined,
+    description: string
+  ) {
     await connect();
     let res = await orbis.createPost({
       body: description,
@@ -136,12 +138,10 @@ export default function UploadVideo() {
       data: {
         // unlockAddress:"0xc37ffe60f6c3830ed0e92939d41ad1ecf8fd46d9",
         // creatorName:"Rahul"
-        playbackID: playbackId
+        playbackID: playbackId,
       },
 
-      tags: [
-        { slug: "Test Tag", title: "Courses" }
-      ]
+      tags: [{ slug: "Test Tag", title: "Courses" }],
     });
     console.log("Created post:", res.doc);
     await getPost();
@@ -150,49 +150,48 @@ export default function UploadVideo() {
   console.log("Assets is", assets);
   useEffect(() => {
     if (status === "success") {
-      console.log("PlaybackID is", assets[0].playbackId);
-      createPost(name, assets[0].playbackId, description);
+      console.log("PlaybackID is", assets[0].playbackId!);
+      createPost(name, assets[0].playbackId!, description);
       toast({
-        title: 'Successfully created your service, please sign message to create post',
-        status: 'success',
+        title:
+          "Successfully created your service, please sign message to create post",
+        status: "success",
         duration: 5000,
         isClosable: true,
-      })
+      });
     }
-
   }, [status]);
   console.log(progress);
 
   const progressFormatted = useMemo(
     () =>
-      progress?.[0].phase === 'failed'
-        ? 'Failed to process video.'
-        : progress?.[0].phase === 'waiting'
-          ? 'Waiting'
-          : progress?.[0].phase === 'uploading'
-            ? (
-              <>
-                <Text color='black' fontSize={'md'} textAlign='center'>Uploading</Text>
-                <Progress value={Math.round(progress?.[0]?.progress * 100)} />
-              </>
-            )
-            : progress?.[0].phase === 'processing'
-              ? (<>
-                <Text color='black' fontSize={'md'} textAlign='center'>Processing</Text>
-                <Progress value={Math.round(progress?.[0]?.progress * 100)} />
-              </>)
-              : null,
-    [progress],
+      progress?.[0].phase === "failed" ? (
+        "Failed to process video."
+      ) : progress?.[0].phase === "waiting" ? (
+        "Waiting"
+      ) : progress?.[0].phase === "uploading" ? (
+        <>
+          <Text color="black" fontSize={"md"} textAlign="center">
+            Uploading
+          </Text>
+          <Progress value={Math.round(progress?.[0]?.progress * 100)} />
+        </>
+      ) : progress?.[0].phase === "processing" ? (
+        <>
+          <Text color="black" fontSize={"md"} textAlign="center">
+            Processing
+          </Text>
+          <Progress value={Math.round(progress?.[0]?.progress * 100)} />
+        </>
+      ) : null,
+    [progress]
   );
 
   return (
     <Box position={"relative"}>
       <Navbar />
       <Center>
-        <Container
-          maxW={"lg"}
-          py={[4, 8]}
-        >
+        <Container maxW={"lg"} py={[4, 8]}>
           <Stack
             bg={"gray.200"}
             rounded={"xl"}
@@ -259,39 +258,41 @@ export default function UploadVideo() {
                     setPrice(parseInt(e.target.value));
                   }}
                 />
-                <Box bg='gray.800' p={4} rounded='lg'>
+                <Box bg="gray.800" p={4} rounded="lg">
                   <FormControl display="flex" alignItems="center" gap={8}>
-                    <HStack alignItems={'center'}>
-                      <FormLabel mb={0}>
-                        Enable duration?
-                      </FormLabel>
-                      <Switch size={"md"} colorScheme='red' onChange={() => setEnableDuration(!enableDuration)} />
+                    <HStack alignItems={"center"}>
+                      <FormLabel mb={0}>Enable duration?</FormLabel>
+                      <Switch
+                        size={"md"}
+                        colorScheme="red"
+                        onChange={() => setEnableDuration(!enableDuration)}
+                      />
                     </HStack>
-                    <HStack alignItems={'center'}>
-                      <FormLabel mb={0}>
-                        Enable supply?
-                      </FormLabel>
-                      <Switch size={"md"} colorScheme='red' onChange={() => setEnableSupply(!enableSupply)} />
+                    <HStack alignItems={"center"}>
+                      <FormLabel mb={0}>Enable supply?</FormLabel>
+                      <Switch
+                        size={"md"}
+                        colorScheme="red"
+                        onChange={() => setEnableSupply(!enableSupply)}
+                      />
                     </HStack>
                   </FormControl>
                   <Flex gap={8} mt={4}>
-                    {
-                      enableDuration ? (
-                        <Input
-                          placeholder="duration"
-                          bg={"gray.100"}
-                          border={0}
-                          color={"gray.500"}
-                          _placeholder={{
-                            color: "gray.500",
-                          }}
-                          type="number"
-                          onChange={(e) => {
-                            setDuration(parseInt(e.target.value));
-                          }}
-                        />
-                      ) : null
-                    }
+                    {enableDuration ? (
+                      <Input
+                        placeholder="duration"
+                        bg={"gray.100"}
+                        border={0}
+                        color={"gray.500"}
+                        _placeholder={{
+                          color: "gray.500",
+                        }}
+                        type="number"
+                        onChange={(e) => {
+                          setDuration(parseInt(e.target.value));
+                        }}
+                      />
+                    ) : null}
                     {enableSupply ? (
                       <Input
                         placeholder="supply"
