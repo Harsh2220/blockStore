@@ -15,9 +15,11 @@ import {
   Icon,
   Textarea,
   Center,
+  useToast,
   Switch,
   FormControl,
   FormLabel,
+  Progress,
   HStack,
 } from "@chakra-ui/react";
 import { useCreateAsset } from "@livepeer/react";
@@ -42,7 +44,7 @@ const lockInterface = new ethers.utils.Interface(PublicLockV11.abi);
 export default function UploadVideo() {
   const { address: creator } = useAccount();
   const [calldata, setCalldata] = useState("");
-  const [playbackID, setplaybackID] = useState("");
+  const [playbackID, setplaybackID] = useState<string|undefined>("");
   const [name, setName] = useState("");
   const [duration, setDuration] = useState(99999);
   const [supply, setSupply] = useState(99999);
@@ -73,6 +75,8 @@ export default function UploadVideo() {
     functionName: "decimals",
     enabled: currency !== ethers.constants.AddressZero,
   });
+
+  const toast = useToast();
 
   const createService = async () => {
     createAsset?.();
@@ -129,7 +133,7 @@ export default function UploadVideo() {
     );
     console.log(data);
   }
-  async function createPost (name:string, playbackId:string) {
+  async function createPost (name:string, playbackId:string|undefined) {
     await connect();
     let res = await orbis.createPost({ body: name,
   title:"This is Title of post",
@@ -146,22 +150,28 @@ export default function UploadVideo() {
     console.log("Created post:",res.doc);
     await getPost();
   }
-  useEffect(() => {
-    if (assets && assets.length > 0) {
-      setplaybackID(assets[0].playbackId ?? "");
-      console.log("PlaybackID is",assets[0].playbackId);
-      console.log(playbackID);
-     createPost(name,assets[0].playbackId);
-    }
-    if (status == "success") {
-     
-      alert("Successfully created your service");
-      // prepareCalldata();
-      // sendTransaction?.();
-    }
-    console.log(progress);
-  }, [assets, status, progress, name, duration, supply, price, decimals, playbackID]);
 
+  console.log("Assets is",assets);
+  useEffect(() => {
+   
+    if (status === "success") {
+            //  setplaybackID(assets[0].playbackId ?? "");
+            
+        console.log("PlaybackID is",assets[0].playbackId);
+        console.log(playbackID);
+       createPost(name,assets[0].playbackId);
+            toast({
+          title: 'Successfully created your service, please sign message to create post',
+          // description: "We've created your account for you.",
+          status: 'success',
+          duration: 5000,
+          isClosable: true,
+        })
+     
+    }
+    
+  }, [status]);
+  console.log(progress);
   return (
     <Box position={"relative"}>
       <Navbar />
@@ -314,6 +324,9 @@ export default function UploadVideo() {
                 />
               </Center>
             </Stack>
+            {process ? (
+              <Progress value={progress * 100} />
+            ) : <></>}
             <Button
               fontFamily={"heading"}
               mt={8}

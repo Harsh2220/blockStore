@@ -11,6 +11,8 @@ import {
   SimpleGrid,
   useColorModeValue,
 } from "@chakra-ui/react";
+import orbis from "./orbis";
+import { useEffect, useState } from "react";
 
 const testimonials = [
   {
@@ -54,8 +56,11 @@ interface TestimonialCardProps {
   index: number;
 }
 
+
 function TestimonialCard(props: TestimonialCardProps) {
-  const { name, role, content, avatar, index } = props;
+  console.log(props);
+  const {  content, index } = props;
+  
   return (
     <Flex
       boxShadow={"lg"}
@@ -88,7 +93,7 @@ function TestimonialCard(props: TestimonialCardProps) {
         justifyContent={"space-between"}
       >
         <Image
-          src={avatar}
+          src={'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&auto=format&fit=crop&w=334&q=80'}
           alt=""
           h="200px"
           roundedTop={"lg"}
@@ -97,7 +102,7 @@ function TestimonialCard(props: TestimonialCardProps) {
         />
         <Box p="5">
           <chakra.p fontWeight={"medium"} fontSize={"15px"} pb={4}>
-            {content}
+            {content.body}
           </chakra.p>
           <Button
             w="full"
@@ -127,7 +132,34 @@ function TestimonialCard(props: TestimonialCardProps) {
 }
 
 export default function GridBlurredBackdrop() {
+  const [response, setResponse] = useState();
+  async function connect() {
+    let res = await orbis.connect();
+
+    /** Check if connection is successful or not */
+    if (res.status == 200) {
+      // setUser(res.did);
+    } else {
+      console.log("Error connecting to Ceramic: ", res);
+      alert("Error connecting to Ceramic.");
+    }
+  }
+
+  async function getPost() {
+    // console.log(res.doc);
+    await connect();
+    let { data, error } = await orbis.getPosts(
+      { tag: "Test Tag" }
+    );
+    console.log(data);
+    setResponse(data);
+    console.log(response);
+  }
+
   return (
+
+
+
     <Flex
       textAlign={"center"}
       p={[2, 10]}
@@ -145,17 +177,25 @@ export default function GridBlurredBackdrop() {
           Upload your assets
         </Heading>
       </Box>
-      <SimpleGrid
+
+
+
+
+      {response ? (<SimpleGrid
         columns={{ base: 1, md: 2, xl: 3 }}
         spacing={"20"}
         maxW={"container.xl"}
         my={16}
         mx={"auto"}
       >
-        {testimonials.map((cardInfo, index) => (
+        {response &&  response.map((cardInfo:any, index:number) => (
           <TestimonialCard {...cardInfo} index={index} key={index} />
         ))}
-      </SimpleGrid>
+      </SimpleGrid>) : (<Button onClick={getPost}>
+        Show Videos
+
+      </Button>)}
+
     </Flex>
   );
 }
