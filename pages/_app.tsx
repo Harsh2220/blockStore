@@ -6,7 +6,7 @@ import {
   LivepeerConfig,
   studioProvider,
 } from "@livepeer/react";
-import { WagmiConfig, createClient, configureChains } from "wagmi";
+import { WagmiConfig, createClient, configureChains, goerli } from "wagmi";
 import {
   ConnectKitProvider,
   ConnectKitButton,
@@ -17,7 +17,7 @@ import { publicProvider } from "wagmi/providers/public";
 
 const alchemyId = "SH8NoQMHqmNkqexUapP5tVgv5KRQoFVx";
 
-const { chains } = configureChains([polygonMumbai], [publicProvider()]);
+const { chains } = configureChains([goerli], [publicProvider()]);
 
 const wagmiClient = createClient(
   getDefaultClient({

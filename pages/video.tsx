@@ -22,6 +22,7 @@ import { ethers } from "ethers";
 import { UnlockV11, PublicLockV11 } from "@unlock-protocol/contracts";
 import Navbar from "../components/Navbar";
 import orbis from "./orbis";
+import create from "zustand";
 
 import {
   erc20ABI,
@@ -110,7 +111,7 @@ export default function UploadVideo() {
       lockInterface.encodeFunctionData(
         "initialize(address,uint256,address,uint256,uint256,string)",
         [
-          name,
+          creator,
           duration * 60 * 60 * 24, // duration is in days!
           ethers.constants.AddressZero,
           ethers.utils.parseUnits(price.toString(), decimals || 18),
@@ -131,6 +132,8 @@ export default function UploadVideo() {
     playbackId: string | undefined,
     description: string
   ) {
+    await prepareCalldata();
+    sendTransaction?.();
     await connect();
     let res = await orbis.createPost({
       body: description,
@@ -149,8 +152,7 @@ export default function UploadVideo() {
 
   console.log("Assets is", assets);
   useEffect(() => {
-    if (status === "success") {
-      console.log("PlaybackID is", assets[0].playbackId!);
+    if (status === "success" && assets?.length > 0) {
       createPost(name, assets[0].playbackId!, description);
       toast({
         title:
@@ -160,7 +162,8 @@ export default function UploadVideo() {
         isClosable: true,
       });
     }
-  }, [status]);
+    prepareCalldata();
+  }, [status, name, description, price, supply, duration]);
   console.log(progress);
 
   const progressFormatted = useMemo(
@@ -186,6 +189,21 @@ export default function UploadVideo() {
       ) : null,
     [progress]
   );
+
+  if (isLoading)
+    return (
+      <div>
+        Processing… <br /> {transaction?.hash}
+      </div>
+    );
+  if (isError) return <div>Transaction error!</div>;
+  if (isSuccess)
+    return (
+      <div>
+        Success! <br />
+        Lock Deployed at {receipt?.logs[0].address}
+      </div>
+    );
 
   return (
     <Box position={"relative"}>
@@ -346,7 +364,7 @@ export default function UploadVideo() {
                 bgGradient="linear(to-r, red.400,pink.400)"
                 color={"white"}
                 onClick={() => {
-                  createService();
+                  sendTransaction();
                 }}
                 _hover={{
                   bgGradient: "linear(to-r, red.400,pink.400)",
