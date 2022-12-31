@@ -96,31 +96,33 @@ export default function UploadVideo() {
     hash: transaction?.hash,
   });
 
+  const prepareCalldata = async () => {
+    setCalldata(
+      lockInterface.encodeFunctionData(
+        "initialize(address,uint256,address,uint256,uint256,string)",
+        [
+          name,
+          duration * 60 * 60 * 24, // duration is in days!
+          ethers.constants.AddressZero,
+          ethers.utils.parseUnits(price.toString(), decimals || 18),
+          supply,
+          name,
+        ]
+      )
+    );
+  };
+
   useEffect(() => {
-    // if (assets && assets.length > 0) {
-    //   setplaybackID(assets[0].playbackId ?? "");
-    // }
-    // if (status == "success") {
-    //   prepareCalldata();
-    //   sendTransaction?.();
-    // }
-    const prepareCalldata = async () => {
-      setCalldata(
-        lockInterface.encodeFunctionData(
-          "initialize(address,uint256,address,uint256,uint256,string)",
-          [
-            name,
-            duration * 60 * 60 * 24, // duration is in days!
-            ethers.constants.AddressZero,
-            ethers.utils.parseUnits(price.toString(), decimals || 18),
-            supply,
-            name,
-          ]
-        )
-      );
-    };
-    prepareCalldata();
-  }, [assets, status, progress, name, duration, supply, price]);
+    if (assets && assets.length > 0) {
+      setplaybackID(assets[0].playbackId ?? "");
+    }
+    if (status == "success") {
+      alert("Successfully created your service");
+      // prepareCalldata();
+      // sendTransaction?.();
+    }
+    console.log(progress);
+  }, [assets, status, progress, name, duration, supply, price, decimals]);
 
   return (
     <Box position={"relative"}>
@@ -281,7 +283,7 @@ export default function UploadVideo() {
               bgGradient="linear(to-r, red.400,pink.400)"
               color={"white"}
               onClick={() => {
-                sendTransaction?.();
+                createService();
               }}
               _hover={{
                 bgGradient: "linear(to-r, red.400,pink.400)",
