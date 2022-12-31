@@ -17,7 +17,7 @@ import { useState } from "react";
 import VideoCard from "../components/VideoCard";
 
 export default function GridBlurredBackdrop() {
-  const [response, setResponse] = useState();
+  const [response, setResponse] = useState<any[]>();
   async function connect() {
     let res = await orbis.connect();
 

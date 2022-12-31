@@ -7,12 +7,6 @@ import {
   Container,
   Input,
   Button,
-  SimpleGrid,
-  Avatar,
-  AvatarGroup,
-  useBreakpointValue,
-  IconProps,
-  Icon,
   Textarea,
   Center,
   useToast,
@@ -24,7 +18,6 @@ import {
 } from "@chakra-ui/react";
 import { useCreateAsset } from "@livepeer/react";
 import { useEffect, useMemo, useState } from "react";
-import { motion } from "framer-motion";
 import { ethers } from "ethers";
 import { UnlockV11, PublicLockV11 } from "@unlock-protocol/contracts";
 import Navbar from "../components/Navbar";
@@ -44,7 +37,6 @@ const lockInterface = new ethers.utils.Interface(PublicLockV11.abi);
 export default function UploadVideo() {
   const { address: creator } = useAccount();
   const [calldata, setCalldata] = useState("");
-  const [playbackID, setplaybackID] = useState<string | undefined>("");
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [duration, setDuration] = useState(99999);
@@ -157,21 +149,15 @@ export default function UploadVideo() {
 
   console.log("Assets is", assets);
   useEffect(() => {
-
     if (status === "success") {
-      //  setplaybackID(assets[0].playbackId ?? "");
-
       console.log("PlaybackID is", assets[0].playbackId);
-      console.log(playbackID);
       createPost(name, assets[0].playbackId, description);
       toast({
         title: 'Successfully created your service, please sign message to create post',
-        // description: "We've created your account for you.",
         status: 'success',
         duration: 5000,
         isClosable: true,
       })
-
     }
 
   }, [status]);
@@ -184,9 +170,17 @@ export default function UploadVideo() {
         : progress?.[0].phase === 'waiting'
           ? 'Waiting'
           : progress?.[0].phase === 'uploading'
-            ? <Progress value={Math.round(progress?.[0]?.progress * 100)} />
+            ? (
+              <>
+                <Text color='black' fontSize={'md'} textAlign='center'>Uploading</Text>
+                <Progress value={Math.round(progress?.[0]?.progress * 100)} />
+              </>
+            )
             : progress?.[0].phase === 'processing'
-              ? <Progress value={Math.round(progress?.[0]?.progress * 100)} />
+              ? (<>
+                <Text color='black' fontSize={'md'} textAlign='center'>Processing</Text>
+                <Progress value={Math.round(progress?.[0]?.progress * 100)} />
+              </>)
               : null,
     [progress],
   );
@@ -343,7 +337,7 @@ export default function UploadVideo() {
                   />
                 </Center>
               </Stack>
-              {progressFormatted && <Text>{progressFormatted}</Text>}
+              {progressFormatted && <Text my={2}>{progressFormatted}</Text>}
               <Button
                 fontFamily={"heading"}
                 mt={8}
