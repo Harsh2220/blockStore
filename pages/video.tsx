@@ -26,6 +26,7 @@ import { motion } from "framer-motion";
 import { ethers } from "ethers";
 import { UnlockV11, PublicLockV11 } from "@unlock-protocol/contracts";
 import Navbar from "../components/Navbar";
+import orbis from "./orbis";
 
 import {
   erc20ABI,
@@ -38,7 +39,6 @@ import {
 
 const MotionBox = motion(Box);
 const lockInterface = new ethers.utils.Interface(PublicLockV11.abi);
-
 export default function UploadVideo() {
   const { address: creator } = useAccount();
   const [calldata, setCalldata] = useState("");
@@ -86,7 +86,7 @@ export default function UploadVideo() {
   });
 
   const { data: transaction, sendTransaction } = useSendTransaction(config);
-
+  const [user, setUser] = useState();
   const {
     isLoading,
     isSuccess,
@@ -95,7 +95,17 @@ export default function UploadVideo() {
   } = useWaitForTransaction({
     hash: transaction?.hash,
   });
+  async function connect() {
+    let res = await orbis.connect();
 
+    /** Check if connection is successful or not */
+    if (res.status == 200) {
+      setUser(res.did);
+    } else {
+      console.log("Error connecting to Ceramic: ", res);
+      alert("Error connecting to Ceramic.");
+    }
+  }
   const prepareCalldata = async () => {
     setCalldata(
       lockInterface.encodeFunctionData(
@@ -112,17 +122,45 @@ export default function UploadVideo() {
     );
   };
 
+  async function getPost() {
+    // console.log(res.doc);
+    let { data, error } = await orbis.getPosts(
+     { tag:"Test Tag"}
+    );
+    console.log(data);
+  }
+  async function createPost (name:string, playbackId:string) {
+    await connect();
+    let res = await orbis.createPost({ body: name,
+  title:"This is Title of post",
+  data:{
+    // unlockAddress:"0xc37ffe60f6c3830ed0e92939d41ad1ecf8fd46d9",
+    // creatorName:"Rahul"
+     playbackID:playbackId
+  },
+  
+  tags:[
+   { slug:"Test Tag",title:"Courses"}
+  ]
+  });
+    console.log("Created post:",res.doc);
+    await getPost();
+  }
   useEffect(() => {
     if (assets && assets.length > 0) {
       setplaybackID(assets[0].playbackId ?? "");
+      console.log("PlaybackID is",assets[0].playbackId);
+      console.log(playbackID);
+     createPost(name,assets[0].playbackId);
     }
     if (status == "success") {
+     
       alert("Successfully created your service");
       // prepareCalldata();
       // sendTransaction?.();
     }
     console.log(progress);
-  }, [assets, status, progress, name, duration, supply, price, decimals]);
+  }, [assets, status, progress, name, duration, supply, price, decimals, playbackID]);
 
   return (
     <Box position={"relative"}>

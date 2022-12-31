@@ -28,7 +28,7 @@ const wagmiClient = createClient(
 );
 
 const client = createReactClient({
-  provider: studioProvider({ apiKey: "0c554a6b-fbe0-4399-a1db-25518848307c" }),
+  provider: studioProvider({ apiKey: "ff1b0e50-c8e1-4f5f-b462-d1e8c961e232" }),
 });
 
 export default function App({ Component, pageProps }: AppProps) {
