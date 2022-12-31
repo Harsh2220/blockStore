@@ -46,6 +46,7 @@ export default function UploadVideo() {
   const [calldata, setCalldata] = useState("");
   const [playbackID, setplaybackID] = useState<string|undefined>("");
   const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
   const [duration, setDuration] = useState(99999);
   const [supply, setSupply] = useState(99999);
   const [price, setPrice] = useState(0);
@@ -133,10 +134,10 @@ export default function UploadVideo() {
     );
     console.log(data);
   }
-  async function createPost (name:string, playbackId:string|undefined) {
+  async function createPost (name:string, playbackId:string|undefined,description:string) {
     await connect();
-    let res = await orbis.createPost({ body: name,
-  title:"This is Title of post",
+    let res = await orbis.createPost({ body: description,
+  title:name,
   data:{
     // unlockAddress:"0xc37ffe60f6c3830ed0e92939d41ad1ecf8fd46d9",
     // creatorName:"Rahul"
@@ -159,7 +160,7 @@ export default function UploadVideo() {
             
         console.log("PlaybackID is",assets[0].playbackId);
         console.log(playbackID);
-       createPost(name,assets[0].playbackId);
+       createPost(name,assets[0].playbackId,description);
             toast({
           title: 'Successfully created your service, please sign message to create post',
           // description: "We've created your account for you.",
@@ -238,6 +239,18 @@ export default function UploadVideo() {
                 }}
                 onChange={(e) => {
                   setName(e.target.value);
+                }}
+              />
+               <Textarea
+                placeholder="Discription"
+                bg={"gray.100"}
+                border={0}
+                color={"gray.500"}
+                _placeholder={{
+                  color: "gray.500",
+                }}
+                onChange={(e) => {
+                  setDescription(e.target.value);
                 }}
               />
               {/* <FormControl display="flex" alignItems="center" gap={8}>

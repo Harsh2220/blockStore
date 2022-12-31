@@ -102,6 +102,9 @@ function TestimonialCard(props: TestimonialCardProps) {
         />
         <Box p="5">
           <chakra.p fontWeight={"medium"} fontSize={"15px"} pb={4}>
+            {content.title}
+          </chakra.p>
+          <chakra.p fontWeight={"medium"} fontSize={"15px"} pb={4}>
             {content.body}
           </chakra.p>
           <Button
