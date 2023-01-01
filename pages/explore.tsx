@@ -136,7 +136,7 @@ export default function GridBlurredBackdrop() {
   async function getPost() {
     // console.log(res.doc);
     await connect();
-    let { data, error } = await orbis.getPosts({ tag: "Test Tag" });
+    let { data, error } = await orbis.getPosts({ tag: "videos" });
     console.log(data);
     setResponse(data);
     console.log(response);

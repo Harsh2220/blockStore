@@ -156,7 +156,7 @@ export default function UploadVideo() {
         playbackID: playbackId,
         imageUrl: thumbnailAddr,
       },
-      tags: [{ slug: "Test Tag", title: "Courses" }],
+      tags: [{ slug: "videos", title: "Courses" }],
     });
     console.log("Created post:", res.doc);
     await getPost();
@@ -170,7 +170,7 @@ export default function UploadVideo() {
         title:
           "Successfully created your service, please sign message to create post",
         status: "success",
-        duration: 5000,
+        duration: 9000,
         isClosable: true,
       });
     }
