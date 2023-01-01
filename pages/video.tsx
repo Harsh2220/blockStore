@@ -26,7 +26,6 @@ import { useRouter } from "next/router";
 import abis from "@unlock-protocol/contracts";
 import create from "zustand";
 import { useStore } from "../components/lockedStore";
-
 import {
   erc20ABI,
   useAccount,
@@ -53,6 +52,7 @@ export default function UploadVideo() {
   const [video, setVideo] = useState<File | undefined>(undefined);
   const [thumbnail, setThumbnail] = useState<File | undefined>(undefined);
   const [thumbnailAddr, setThumbnailAddr] = useState("");
+
 
   const router = useRouter();
   const {
@@ -158,7 +158,11 @@ export default function UploadVideo() {
       },
       tags: [{ slug: "videos", title: "Courses" }],
     });
-    console.log("Created post:", res.doc);
+    console.log("Created post:", res.doc)
+    if(res.doc != null){
+      router.push("/explore");
+    }
+
     await getPost();
   }
 
