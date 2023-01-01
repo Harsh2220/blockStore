@@ -154,13 +154,8 @@ export default function UploadVideo() {
         // unlockAddress:"0xc37ffe60f6c3830ed0e92939d41ad1ecf8fd46d9",
         // creatorName:"Rahul"
         playbackID: playbackId,
+        imageUrl: thumbnailAddr,
       },
-      media: [
-        {
-          type: "image",
-          url: thumbnailAddr,
-        },
-      ],
       tags: [{ slug: "Test Tag", title: "Courses" }],
     });
     console.log("Created post:", res.doc);
