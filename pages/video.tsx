@@ -22,7 +22,9 @@ import { ethers } from "ethers";
 import { UnlockV11, PublicLockV11 } from "@unlock-protocol/contracts";
 import Navbar from "../components/Navbar";
 import orbis from "./orbis";
+import abis from "@unlock-protocol/contracts";
 import create from "zustand";
+import { useStore } from "../components/lockedStore";
 
 import {
   erc20ABI,
@@ -31,6 +33,7 @@ import {
   useWaitForTransaction,
   useContractRead,
   usePrepareContractWrite,
+  useSigner,
 } from "wagmi";
 
 export default function UploadVideo() {
@@ -47,6 +50,12 @@ export default function UploadVideo() {
   const [enableDuration, setEnableDuration] = useState(false);
   const [enableSupply, setEnableSupply] = useState(false);
   const [video, setVideo] = useState<File | undefined>(undefined);
+  const [deployedUnlockAddress, setDeployedUnlockAddress] = useState();
+  const [publicLockAddress, setPublicLockAddress] = useState();
+  // const [publicLock, setPublicLock] = useState<any>();
+  // const [unlock, setUnlock] = useState<any>();
+  const userSigner = useSigner();
+  const { unlock, publicLock, setunlock, setPublicLock } = useStore();
   const {
     mutate: createAsset,
     data: assets,
@@ -152,7 +161,7 @@ export default function UploadVideo() {
 
   console.log("Assets is", assets);
   useEffect(() => {
-    if (status === "success" && assets?.length > 0) {
+    if (status === "success" && assets) {
       createPost(name, assets[0].playbackId!, description);
       toast({
         title:
@@ -164,7 +173,45 @@ export default function UploadVideo() {
     }
     prepareCalldata();
   }, [status, name, description, price, supply, duration]);
-  console.log(progress);
+
+  const unlockData = unlock;
+  const publicLockData = publicLock;
+  useEffect(() => {
+    if (unlockData && publicLockData) {
+      const unlockAddress = unlockData.unlockAddress;
+      const publicLockAddress = publicLockData.publicLockAddress;
+      setDeployedUnlockAddress(unlockAddress);
+      setPublicLockAddress(publicLockAddress);
+    }
+  }, []);
+
+  useEffect(() => {
+    const readyUnlock = () => {
+      let unlockContract;
+      let publicLockContract;
+      try {
+        if (deployedUnlockAddress) {
+          unlockContract = new ethers.Contract(
+            deployedUnlockAddress,
+            abis.UnlockV11.abi,
+            userSigner
+          );
+        }
+        if (publicLockAddress) {
+          publicLockContract = new ethers.Contract(
+            publicLockAddress,
+            abis.PublicLockV10.abi,
+            userSigner
+          );
+        }
+      } catch (e) {
+        console.log(e);
+      }
+      // setUnlock(unlockContract);
+      // setPublicLock(publicLockContract);
+    };
+    readyUnlock();
+  }, [creator]);
 
   const progressFormatted = useMemo(
     () =>
@@ -189,21 +236,6 @@ export default function UploadVideo() {
       ) : null,
     [progress]
   );
-
-  if (isLoading)
-    return (
-      <div>
-        Processing… <br /> {transaction?.hash}
-      </div>
-    );
-  if (isError) return <div>Transaction error!</div>;
-  if (isSuccess)
-    return (
-      <div>
-        Success! <br />
-        Lock Deployed at {receipt?.logs[0].address}
-      </div>
-    );
 
   return (
     <Box position={"relative"}>
@@ -364,7 +396,7 @@ export default function UploadVideo() {
                 bgGradient="linear(to-r, red.400,pink.400)"
                 color={"white"}
                 onClick={() => {
-                  sendTransaction();
+                  createAsset?.();
                 }}
                 _hover={{
                   bgGradient: "linear(to-r, red.400,pink.400)",
