@@ -10,12 +10,15 @@ import {
   Icon,
   Image,
   SimpleGrid,
+  Stack,
+  Text,
   useColorModeValue,
 } from "@chakra-ui/react";
 import orbis from "./orbis";
 import { useState } from "react";
 import VideoCard from "../components/VideoCard";
 import { useRouter } from "next/router";
+import Navbar from "../components/Navbar";
 
 const testimonials = [
   {
@@ -143,42 +146,74 @@ export default function GridBlurredBackdrop() {
   }
 
   return (
-    <Flex
-      textAlign={"center"}
-      p={[2, 10]}
-      justifyContent={"center"}
-      direction={"column"}
-      width={"full"}
-    >
-      <Box width={{ base: "full", sm: "lg", lg: "xl" }} margin={"auto"}>
-        <Heading
-          py={5}
-          fontSize={48}
-          fontWeight={"bold"}
-          color={useColorModeValue("gray.700", "gray.50")}
-        >
-          Videos
-        </Heading>
-      </Box>
-
-      {response ? (
-        <SimpleGrid
-          columns={{ base: 1, md: 2, xl: 3 }}
-          spacing={"20"}
-          maxW={"container.xl"}
-          my={16}
-          mx={"auto"}
-        >
-          {response &&
-            response.map((cardInfo: any, index: number) => (
-              <VideoCard {...cardInfo} index={index} key={index} />
-            ))}
-        </SimpleGrid>
-      ) : (
-        <Center h="50vh">
-          <Button onClick={getPost}>Show Videos</Button>
-        </Center>
-      )}
-    </Flex>
+    <>
+      <Navbar />
+      <Flex
+        textAlign={"center"}
+        p={[2, 10]}
+        justifyContent={"center"}
+        direction={"column"}
+        width={"full"}
+      >
+        {response ? (
+          <SimpleGrid
+            columns={{ base: 1, md: 2, xl: 3 }}
+            spacing={"20"}
+            maxW={"container.xl"}
+            my={16}
+            mx={"auto"}
+          >
+            {response &&
+              response.map((cardInfo: any, index: number) => (
+                <VideoCard {...cardInfo} index={index} key={index} />
+              ))}
+          </SimpleGrid>
+        ) : (
+          <Center h="50vh">
+            <Container maxW={'3xl'}>
+              <Stack
+                as={Box}
+                textAlign={'center'}
+                spacing={{ base: 8, md: 14 }}
+                py={{ base: 20, md: 36 }}>
+                <Heading
+                  fontWeight={600}
+                  fontSize={{ base: '2xl', sm: '4xl', md: '6xl' }}
+                  lineHeight={'110%'}>
+                  Make money from <br />
+                  <Text as={'span'} color={'green.400'}>
+                    your audience
+                  </Text>
+                </Heading>
+                <Text color={'gray.500'}>
+                  Monetize your content by charging your most loyal readers and reward
+                  them loyalty points. Give back to your loyal readers by granting
+                  them access to your pre-releases and sneak-peaks.
+                </Text>
+                <Stack
+                  direction={'column'}
+                  spacing={3}
+                  align={'center'}
+                  alignSelf={'center'}
+                  position={'relative'}>
+                  <Button
+                    colorScheme={'green'}
+                    bg={'green.400'}
+                    rounded={'full'}
+                    px={6}
+                    _hover={{
+                      bg: 'green.500',
+                    }}
+                    onClick={getPost}
+                  >
+                    Show Videos
+                  </Button>
+                </Stack>
+              </Stack>
+            </Container>
+          </Center>
+        )}
+      </Flex>
+    </>
   );
 }

@@ -15,6 +15,7 @@ import {
   FormLabel,
   Progress,
   HStack,
+  Image,
 } from "@chakra-ui/react";
 import { useCreateAsset } from "@livepeer/react";
 import { useEffect, useMemo, useState } from "react";
@@ -159,7 +160,7 @@ export default function UploadVideo() {
       tags: [{ slug: "videos", title: "Courses" }],
     });
     console.log("Created post:", res.doc)
-    if(res.doc != null){
+    if (res.doc != null) {
       router.push("/explore");
     }
 
@@ -228,203 +229,210 @@ export default function UploadVideo() {
   return (
     <Box position={"relative"}>
       <Navbar />
-      <Center>
-        <Container maxW={"lg"} py={[4, 8]}>
-          <Stack
-            bg={"gray.200"}
-            rounded={"xl"}
-            p={{ base: 4, sm: 6, md: 8 }}
-            spacing={{ base: 8 }}
-            maxW={{ lg: "lg" }}
-          >
-            <Stack spacing={4}>
-              <Heading
-                color={"gray.800"}
-                lineHeight={1.1}
-                fontSize={{ base: "2xl", sm: "3xl", md: "4xl" }}
-              >
-                Upload a video
-                <Text
-                  as={"span"}
-                  bgGradient="linear(to-r, red.400,pink.400)"
-                  bgClip="text"
-                >
-                  !
-                </Text>
-              </Heading>
-              <Text color={"gray.500"} fontSize={{ base: "sm", sm: "md" }}>
-                We’re looking for amazing engineers just like you! Become a part
-                of our rockstar engineering team and skyrocket your career!
-              </Text>
-            </Stack>
-            <Box as={"form"} mt={10}>
+      <Stack h='calc(100vh - 72px)' direction={{ base: 'column', md: 'row' }}>
+        <Flex flex={1}>
+          <Image
+            alt={'Login Image'}
+            objectFit={'cover'}
+            src={
+              'https://images.unsplash.com/photo-1527689368864-3a821dbccc34?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'
+            }
+          />
+        </Flex>
+        <Flex flex={1} alignItems='center'>
+          <Container maxW={"lg"}>
+            <Stack
+              bg={"gray.900"}
+              rounded={"xl"}
+              p={{ base: 4, sm: 6, md: 8 }}
+              spacing={{ base: 8 }}
+              maxW={{ lg: "lg" }}
+            >
               <Stack spacing={4}>
-                <Input
-                  placeholder="Name"
-                  bg={"gray.100"}
-                  border={0}
-                  color={"gray.500"}
-                  _placeholder={{
-                    color: "gray.500",
-                  }}
-                  onChange={(e) => {
-                    setName(e.target.value);
-                  }}
-                />
-                <Textarea
-                  placeholder="Discription"
-                  bg={"gray.100"}
-                  border={0}
-                  color={"gray.500"}
-                  _placeholder={{
-                    color: "gray.500",
-                  }}
-                  onChange={(e) => {
-                    setDescription(e.target.value);
-                  }}
-                />
-                <Input
-                  placeholder="Price"
-                  bg={"gray.100"}
-                  border={0}
-                  color={"gray.500"}
-                  _placeholder={{
-                    color: "gray.500",
-                  }}
-                  type="number"
-                  onChange={(e) => {
-                    setPrice(parseInt(e.target.value));
-                  }}
-                />
-                <Box bg="gray.800" p={4} rounded="lg">
-                  <FormControl display="flex" alignItems="center" gap={8}>
-                    <HStack alignItems={"center"}>
-                      <FormLabel mb={0}>Enable duration?</FormLabel>
-                      <Switch
-                        size={"md"}
-                        colorScheme="red"
-                        onChange={() => setEnableDuration(!enableDuration)}
-                      />
-                    </HStack>
-                    <HStack alignItems={"center"}>
-                      <FormLabel mb={0}>Enable supply?</FormLabel>
-                      <Switch
-                        size={"md"}
-                        colorScheme="red"
-                        onChange={() => setEnableSupply(!enableSupply)}
-                      />
-                    </HStack>
-                  </FormControl>
-                  <Flex gap={8} mt={4}>
-                    {enableDuration ? (
-                      <Input
-                        placeholder="duration"
-                        bg={"gray.100"}
-                        border={0}
-                        color={"gray.500"}
-                        _placeholder={{
-                          color: "gray.500",
-                        }}
-                        type="number"
-                        onChange={(e) => {
-                          setDuration(parseInt(e.target.value));
-                        }}
-                      />
-                    ) : null}
-                    {enableSupply ? (
-                      <Input
-                        placeholder="supply"
-                        bg={"gray.100"}
-                        border={0}
-                        color={"gray.500"}
-                        _placeholder={{
-                          color: "gray.500",
-                        }}
-                        type="number"
-                        onChange={(e) => {
-                          setSupply(parseInt(e.target.value));
-                        }}
-                      />
-                    ) : null}
-                  </Flex>
-                </Box>
-                <Box p={4} rounded="lg">
-                  <FormControl display="flex" alignItems="center" gap={4}>
-                    <label
-                      htmlFor="video"
-                      style={{
-                        backgroundColor: "black",
-                        textAlign: "center",
-                        padding: "10px",
-                        fontWeight: "500",
-                        borderRadius: "4px",
-                        color: "white",
-                        cursor: "pointer",
-                        width: "100%",
-                      }}
-                    >
-                      Select a video
-                    </label>
-                    <input
-                      type="file"
-                      id="video"
-                      onChange={(e) => {
-                        if (e.target.files) {
-                          setVideo(e.target.files[0]);
-                        }
-                      }}
-                      style={{ display: "none" }}
-                    />
-                    <Input
-                      borderColor={"gray.800"}
-                      _hover={{ borderColor: "blue.800", border: "2px" }}
-                      p={1}
-                      colorScheme="blue"
-                      variant="outline"
-                      w="full"
-                      type="file"
-                      accept="image/*"
-                      name="file"
-                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                        const files = (e.target as HTMLInputElement).files!;
-                        const client = new Web3Storage({
-                          token:
-                            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDkxZTRjOEMwNTJiMzkzNEQ3Nzc5NWM3QWQ3MkQ0MTFhMGQyMWUxODIiLCJpc3MiOiJ3ZWIzLXN0b3JhZ2UiLCJpYXQiOjE2NzE2ODYwNTU1NjIsIm5hbWUiOiJNYXRpYy1Qcm9maWxlIn0.zDWjIoqZUCnPXtvWXjm_ZbvPN2ZZHTfcK7JHdM2S7hk",
-                        });
-                        client.put(files).then((cid) => {
-                          console.log(cid);
-                          setThumbnailAddr(
-                            `https://${cid}.ipfs.w3s.link/${files[0].name}`
-                          );
-                        });
-                      }}
-                    />
-                  </FormControl>
-                </Box>
+                <Heading
+                  color={"gray.200"}
+                  lineHeight={1.1}
+                  fontSize={{ base: "2xl", sm: "3xl", md: "4xl" }}
+                >
+                  Upload a video
+                  <Text
+                    as={"span"}
+                    bgGradient="linear(to-r, red.400,pink.400)"
+                    bgClip="text"
+                  >
+                    !
+                  </Text>
+                </Heading>
               </Stack>
-              {progressFormatted && <Text my={2}>{progressFormatted}</Text>}
-              <Button
-                fontFamily={"heading"}
-                mt={8}
-                w={"full"}
-                bgGradient="linear(to-r, red.400,pink.400)"
-                color={"white"}
-                onClick={() => {
-                  createService();
-                }}
-                _hover={{
-                  bgGradient: "linear(to-r, red.400,pink.400)",
-                  boxShadow: "xl",
-                }}
-                disabled={isLoading}
-              >
-                Submit
-              </Button>
-            </Box>
-            form
-          </Stack>
-        </Container>
-      </Center>
+              <Box as={"form"} mt={10}>
+                <Stack spacing={4}>
+                  <Input
+                    placeholder="Name"
+                    bg={"gray.100"}
+                    border={0}
+                    color={"gray.500"}
+                    _placeholder={{
+                      color: "gray.500",
+                    }}
+                    onChange={(e) => {
+                      setName(e.target.value);
+                    }}
+                  />
+                  <Textarea
+                    placeholder="Discription"
+                    bg={"gray.100"}
+                    border={0}
+                    color={"gray.500"}
+                    _placeholder={{
+                      color: "gray.500",
+                    }}
+                    onChange={(e) => {
+                      setDescription(e.target.value);
+                    }}
+                  />
+                  <Input
+                    placeholder="Price"
+                    bg={"gray.100"}
+                    border={0}
+                    color={"gray.500"}
+                    _placeholder={{
+                      color: "gray.500",
+                    }}
+                    type="number"
+                    onChange={(e) => {
+                      setPrice(parseInt(e.target.value));
+                    }}
+                  />
+                  <Box bg="gray.800" p={4} rounded="lg">
+                    <FormControl display="flex" alignItems="center" gap={8}>
+                      <HStack alignItems={"center"}>
+                        <FormLabel mb={0}>Enable duration?</FormLabel>
+                        <Switch
+                          size={"md"}
+                          colorScheme="red"
+                          onChange={() => setEnableDuration(!enableDuration)}
+                        />
+                      </HStack>
+                      <HStack alignItems={"center"}>
+                        <FormLabel mb={0}>Enable supply?</FormLabel>
+                        <Switch
+                          size={"md"}
+                          colorScheme="red"
+                          onChange={() => setEnableSupply(!enableSupply)}
+                        />
+                      </HStack>
+                    </FormControl>
+                    <Flex gap={8} mt={4}>
+                      {enableDuration ? (
+                        <Input
+                          placeholder="duration"
+                          bg={"gray.100"}
+                          border={0}
+                          color={"gray.500"}
+                          _placeholder={{
+                            color: "gray.500",
+                          }}
+                          type="number"
+                          onChange={(e) => {
+                            setDuration(parseInt(e.target.value));
+                          }}
+                        />
+                      ) : null}
+                      {enableSupply ? (
+                        <Input
+                          placeholder="supply"
+                          bg={"gray.100"}
+                          border={0}
+                          color={"gray.500"}
+                          _placeholder={{
+                            color: "gray.500",
+                          }}
+                          type="number"
+                          onChange={(e) => {
+                            setSupply(parseInt(e.target.value));
+                          }}
+                        />
+                      ) : null}
+                    </Flex>
+                  </Box>
+                  <Box p={4} rounded="lg">
+                    <FormControl display="flex" alignItems="center" gap={4}>
+                      <label
+                        htmlFor="video"
+                        style={{
+                          backgroundColor: "black",
+                          textAlign: "center",
+                          padding: "10px",
+                          fontWeight: "500",
+                          borderRadius: "4px",
+                          color: "white",
+                          cursor: "pointer",
+                          width: "100%",
+                        }}
+                      >
+                        Select a video
+                      </label>
+                      <input
+                        type="file"
+                        id="video"
+                        onChange={(e) => {
+                          if (e.target.files) {
+                            setVideo(e.target.files[0]);
+                          }
+                        }}
+                        style={{ display: "none" }}
+                      />
+                      <Input
+                        borderColor={"gray.800"}
+                        _hover={{ borderColor: "blue.800", border: "2px" }}
+                        p={1}
+                        colorScheme="blue"
+                        variant="outline"
+                        w="full"
+                        type="file"
+                        accept="image/*"
+                        name="file"
+                        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                          const files = (e.target as HTMLInputElement).files!;
+                          const client = new Web3Storage({
+                            token:
+                              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDkxZTRjOEMwNTJiMzkzNEQ3Nzc5NWM3QWQ3MkQ0MTFhMGQyMWUxODIiLCJpc3MiOiJ3ZWIzLXN0b3JhZ2UiLCJpYXQiOjE2NzE2ODYwNTU1NjIsIm5hbWUiOiJNYXRpYy1Qcm9maWxlIn0.zDWjIoqZUCnPXtvWXjm_ZbvPN2ZZHTfcK7JHdM2S7hk",
+                          });
+                          client.put(files).then((cid) => {
+                            console.log(cid);
+                            setThumbnailAddr(
+                              `https://${cid}.ipfs.w3s.link/${files[0].name}`
+                            );
+                          });
+                        }}
+                      />
+                    </FormControl>
+                  </Box>
+                </Stack>
+                {progressFormatted && <Text my={2}>{progressFormatted}</Text>}
+                <Button
+                  fontFamily={"heading"}
+                  mt={8}
+                  w={"full"}
+                  bgGradient="linear(to-r, red.400,pink.400)"
+                  color={"white"}
+                  onClick={() => {
+                    createService();
+                  }}
+                  _hover={{
+                    bgGradient: "linear(to-r, red.400,pink.400)",
+                    boxShadow: "xl",
+                  }}
+                  disabled={isLoading}
+                >
+                  Submit
+                </Button>
+              </Box>
+              form
+            </Stack>
+          </Container>
+        </Flex>
+      </Stack>
     </Box>
   );
 }
