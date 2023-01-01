@@ -15,6 +15,6 @@
     "jsx": "preserve",
     "incremental": true
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "pages/video.tsx", "components/UnlockPaywall.jsx", "components/lockedStore.jsx", "components/UnlockVariables.jsx", "components/LockedContent.jsx", "components/CreateLock.jsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "pages/video.tsx", "components/UnlockPaywall.jsx", "components/lockedStore.tsx", "components/UnlockVariables.jsx", "components/LockedContent.jsx", "components/CreateLock.jsx"],
   "exclude": ["node_modules"]
 }
