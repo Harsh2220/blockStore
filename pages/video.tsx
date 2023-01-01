@@ -17,7 +17,7 @@ import {
   HStack,
 } from "@chakra-ui/react";
 import { useCreateAsset } from "@livepeer/react";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useContext } from "react";
 import { ethers } from "ethers";
 import { UnlockV11, PublicLockV11 } from "@unlock-protocol/contracts";
 import Navbar from "../components/Navbar";
@@ -36,6 +36,8 @@ import {
 } from "wagmi";
 import { Filelike, Web3Storage } from "web3.storage";
 
+import { GeneralContext } from "../context";
+
 export default function UploadVideo() {
   const lockInterface = new ethers.utils.Interface(PublicLockV11.abi);
 
@@ -53,6 +55,65 @@ export default function UploadVideo() {
   const [thumbnail, setThumbnail] = useState<File | undefined>(undefined);
   const [thumbnailAddr, setThumbnailAddr] = useState("");
 
+  //krebit
+  const { auth, walletInformation } = useContext(GeneralContext);
+  const [recipient, setRecipient] = useState<string | undefined>("");
+  const [issuedCredentialId, setIssuedCredentialId] = useState("");
+  const [credentials, setCredentials] = useState([]);
+  useEffect(() => {
+    if (!walletInformation) return;
+    if (auth.status !== "resolved") return;
+  }, [auth, walletInformation]);
+
+  const getClaim = async (toAddress: string) => {
+    const badgeValue = {
+      entity: "blockStore",
+      name: "blockStore seller",
+      imageUrl:
+        "https://bafkreie5zeuhbimhjfnapiqpf5n3gqx2q7b6ndfjaryupbkgcmgjaxjsua.ipfs.nftstorage.link",
+      description: "Badge for seller authority",
+      skills: [{ skillId: "customer", score: 100 }],
+      xp: 10,
+    };
+
+    const expirationDate = new Date();
+    const expiresYears = 1;
+    expirationDate.setFullYear(expirationDate.getFullYear() + expiresYears);
+    console.log("expirationDate: ", expirationDate);
+
+    return {
+      id: `blockStore-01`,
+      ethereumAddress: toAddress,
+      did: `did:pkh:eip155:1:${toAddress}`,
+      type: "Badge",
+      value: badgeValue,
+      tags: ["Personhood", "Badge"],
+      typeSchema: "krebit://schemas/badge",
+      expirationDate: new Date(expirationDate).toISOString(),
+    };
+  };
+
+  const issueCredential = async () => {
+    const claim = await getClaim(recipient);
+    const issuedCredential = await walletInformation.issuer.issue(claim);
+
+    console.log("Issued credential:", issuedCredential);
+
+    console.log(
+      "Verifying credential:",
+      await walletInformation.issuer.checkCredential(issuedCredential)
+    );
+
+    const credentialId = await walletInformation.ipassport.addIssued(
+      issuedCredential
+    );
+    setIssuedCredentialId(credentialId);
+  };
+
+  const getIssued = async () => {
+    const credentials = await walletInformation.ipassport.getIssued();
+    setCredentials(credentials);
+  };
 
   const router = useRouter();
   const {
@@ -403,6 +464,28 @@ export default function UploadVideo() {
                 </Box>
               </Stack>
               {progressFormatted && <Text my={2}>{progressFormatted}</Text>}
+              {/* Krebit */}
+              {/* <div>address: {profileInformation.profile.did}</div> */}
+              <div>
+                <Button
+                fontFamily={"heading"}
+                mt={8}
+                w={"full"}
+                bgGradient="linear(to-r, purple.400,blue.400)"
+                color={"white"}
+                onClick={() => {
+                  setRecipient(creator);
+                  issueCredential;
+                }}
+                _hover={{
+                  bgGradient: "linear(to-r, red.400,pink.400)",
+                  boxShadow: "xl",
+                }}
+                disabled={isLoading}
+              >
+                Claim
+              </Button>
+              </div>
               <Button
                 fontFamily={"heading"}
                 mt={8}

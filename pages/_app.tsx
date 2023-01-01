@@ -1,4 +1,5 @@
 import type { AppProps } from "next/app";
+import React from "react";
 import { ChakraProvider } from "@chakra-ui/react";
 import theme from "../styles/theme";
 import {
@@ -14,7 +15,7 @@ import {
 } from "connectkit";
 import { polygonMumbai } from "wagmi/chains";
 import { publicProvider } from "wagmi/providers/public";
-
+import { GeneralProvider } from "../context";
 const alchemyId = "SH8NoQMHqmNkqexUapP5tVgv5KRQoFVx";
 
 const { chains } = configureChains([goerli], [publicProvider()]);
@@ -37,7 +38,9 @@ export default function App({ Component, pageProps }: AppProps) {
       <ConnectKitProvider>
         <LivepeerConfig client={client}>
           <ChakraProvider theme={theme}>
+            <GeneralProvider>
             <Component {...pageProps} />
+            </GeneralProvider>
           </ChakraProvider>
         </LivepeerConfig>
       </ConnectKitProvider>
