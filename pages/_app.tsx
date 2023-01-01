@@ -16,7 +16,7 @@ import {
 import { polygonMumbai } from "wagmi/chains";
 import { publicProvider } from "wagmi/providers/public";
 import { GeneralProvider } from "../context";
-const alchemyId = "SH8NoQMHqmNkqexUapP5tVgv5KRQoFVx";
+const alchemyId = "Alchemy_key";
 
 const { chains } = configureChains([goerli], [publicProvider()]);
 
@@ -29,7 +29,7 @@ const wagmiClient = createClient(
 );
 
 const client = createReactClient({
-  provider: studioProvider({ apiKey: "ff1b0e50-c8e1-4f5f-b462-d1e8c961e232" }),
+  provider: studioProvider({ apiKey: "livepeer_studio_key" }),
 });
 
 export default function App({ Component, pageProps }: AppProps) {

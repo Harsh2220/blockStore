@@ -146,7 +146,7 @@ export default function UploadVideo() {
   };
 
   const { config } = usePrepareContractWrite({
-    address: "0x627118a4fB747016911e5cDA82e2E77C531e8206",
+    address: "lock_address",
     abi: UnlockV11.abi,
     functionName: "createUpgradeableLockAtVersion",
     args: [calldata, 11], // We currently deploy version 11
@@ -212,8 +212,7 @@ export default function UploadVideo() {
       body: description,
       title: name,
       data: {
-        // unlockAddress:"0xc37ffe60f6c3830ed0e92939d41ad1ecf8fd46d9",
-        // creatorName:"Rahul"
+       
         playbackID: playbackId,
         imageUrl: thumbnailAddr,
       },
@@ -249,18 +248,7 @@ export default function UploadVideo() {
     }
   }, []);
 
-  // useEffect(() => {
-  //   if (receipt) {
-  //     useContractEvent({
-  //       address: receipt.logs[0].address as string,
-  //       abi: PublicLockV11.abi,
-  //       eventName: "NewLock",
-  //       listener(...args) {
-  //         console.log(args);
-  //       },
-  //     });
-  //   }
-  // }, [receipt]);
+
 
   const progressFormatted = useMemo(
     () =>
@@ -450,7 +438,7 @@ export default function UploadVideo() {
                         const files = (e.target as HTMLInputElement).files!;
                         const client = new Web3Storage({
                           token:
-                            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDkxZTRjOEMwNTJiMzkzNEQ3Nzc5NWM3QWQ3MkQ0MTFhMGQyMWUxODIiLCJpc3MiOiJ3ZWIzLXN0b3JhZ2UiLCJpYXQiOjE2NzE2ODYwNTU1NjIsIm5hbWUiOiJNYXRpYy1Qcm9maWxlIn0.zDWjIoqZUCnPXtvWXjm_ZbvPN2ZZHTfcK7JHdM2S7hk",
+                            "web3_storage_token",
                         });
                         client.put(files).then((cid) => {
                           console.log(cid);
