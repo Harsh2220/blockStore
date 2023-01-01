@@ -170,39 +170,45 @@ export default function GridBlurredBackdrop() {
           </SimpleGrid>
         ) : (
           <Center h="50vh">
-            <Container maxW={'3xl'}>
+            <Container maxW={"3xl"}>
               <Stack
                 as={Box}
-                textAlign={'center'}
+                textAlign={"center"}
                 spacing={{ base: 8, md: 14 }}
-                py={{ base: 20, md: 36 }}>
+                py={{ base: 20, md: 36 }}
+              >
                 <Heading
                   fontWeight={600}
-                  fontSize={{ base: '2xl', sm: '4xl', md: '6xl' }}
-                  lineHeight={'110%'}>
-                  Make money from <br />
-                  <Text as={'span'} color={'green.400'}>
-                    your audience
+                  fontSize={{ base: "2xl", sm: "4xl", md: "6xl" }}
+                  lineHeight={"110%"}
+                >
+                  Browse Our Wide Selection <br />
+                  <Text as={"span"} color={"green.400"}>
+                    of digital assets
                   </Text>
                 </Heading>
-                <Text color={'gray.500'}>
-                  Monetize your content by charging your most loyal readers and reward
-                  them loyalty points. Give back to your loyal readers by granting
-                  them access to your pre-releases and sneak-peaks.
+                <Text color={"gray.500"}>
+                  Our platform is revolutionizing the way content is stored and
+                  shared online. By leveraging the power of blockchain
+                  technology, we are able to securely and immutably store all
+                  types of digital content, from documents and videos to images
+                  and audio files. This means that your content is safe,
+                  private, and always accessible to you.
                 </Text>
                 <Stack
-                  direction={'column'}
+                  direction={"column"}
                   spacing={3}
-                  align={'center'}
-                  alignSelf={'center'}
-                  position={'relative'}>
+                  align={"center"}
+                  alignSelf={"center"}
+                  position={"relative"}
+                >
                   <Button
-                    colorScheme={'green'}
-                    bg={'green.400'}
-                    rounded={'full'}
+                    colorScheme={"green"}
+                    bg={"green.400"}
+                    rounded={"full"}
                     px={6}
                     _hover={{
-                      bg: 'green.500',
+                      bg: "green.500",
                     }}
                     onClick={getPost}
                   >

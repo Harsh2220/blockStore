@@ -57,14 +57,14 @@ export default function UploadVideo() {
   const [thumbnailAddr, setThumbnailAddr] = useState("");
 
   //krebit
-  const { auth, walletInformation } = useContext(GeneralContext);
+  // const { auth, walletInformation } = useContext(GeneralContext);
   const [recipient, setRecipient] = useState<string | undefined>("");
   const [issuedCredentialId, setIssuedCredentialId] = useState("");
   const [credentials, setCredentials] = useState([]);
-  useEffect(() => {
-    if (!walletInformation) return;
-    if (auth.status !== "resolved") return;
-  }, [auth, walletInformation]);
+  // useEffect(() => {
+  //   if (!walletInformation) return;
+  //   if (auth.status !== "resolved") return;
+  // }, [auth, walletInformation]);
 
   const getClaim = async (toAddress: string) => {
     const badgeValue = {
@@ -128,8 +128,8 @@ export default function UploadVideo() {
     // for the returned data
     video
       ? {
-        sources: [{ name: video.name, file: video }] as const,
-      }
+          sources: [{ name: video.name, file: video }] as const,
+        }
       : null
   );
 
@@ -220,7 +220,7 @@ export default function UploadVideo() {
       },
       tags: [{ slug: "videos", title: "Courses" }],
     });
-    console.log("Created post:", res.doc)
+    console.log("Created post:", res.doc);
     if (res.doc != null) {
       router.push("/explore");
     }
@@ -290,17 +290,17 @@ export default function UploadVideo() {
   return (
     <Box position={"relative"}>
       <Navbar />
-      <Stack h='calc(100vh - 72px)' direction={{ base: 'column', md: 'row' }}>
+      <Stack h="calc(100vh - 72px)" direction={{ base: "column", md: "row" }}>
         <Flex flex={1}>
           <Image
-            alt={'Login Image'}
-            objectFit={'cover'}
+            alt={"Login Image"}
+            objectFit={"cover"}
             src={
-              'https://images.unsplash.com/photo-1527689368864-3a821dbccc34?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'
+              "https://images.unsplash.com/photo-1527689368864-3a821dbccc34?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80"
             }
           />
         </Flex>
-        <Flex flex={1} alignItems='center'>
+        <Flex flex={1} alignItems="center">
           <Container maxW={"lg"}>
             <Stack
               bg={"gray.900"}

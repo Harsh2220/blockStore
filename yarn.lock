@@ -2018,33 +2018,7 @@
   resolved "https://registry.yarnpkg.com/@ledgerhq/connect-kit-loader/-/connect-kit-loader-1.0.2.tgz#8554e16943f86cc2a5f6348a14dfe6e5bd0c572a"
   integrity sha512-TQ21IjcZOw/scqypaVFY3jHVqI7X7Hta3qN/us6FvTol3AY06UmrhhXGww0E9xHmAbdX241ddwXEiMBSQZFr9g==
 
-"@lit-protocol/sdk-browser@^1.1.238":
-  version "1.1.241"
-  resolved "https://registry.npmjs.org/@lit-protocol/sdk-browser/-/sdk-browser-1.1.241.tgz"
-  integrity sha512-xVk9cV3OVb4Q7Op81khh337fb21NuNWVnnVsLnZtVtCGf+XW6l9dcO7QLNIhe9ddQJZxObPEVU5/BZx+hzbHMg==
-  dependencies:
-    "@ethersproject/bytes" "^5.5.0"
-    "@ethersproject/contracts" "^5.2.0"
-    "@ethersproject/hash" "^5.4.0"
-    "@ethersproject/providers" "^5.2.0"
-    "@ethersproject/strings" "^5.5.0"
-    "@ethersproject/units" "^5.4.0"
-    "@ethersproject/wallet" "^5.2.0"
-    "@walletconnect/ethereum-provider" "1.7.8"
-    buffer "^6.0.3"
-    bufferutil "^4.0.6"
-    cross-blob "^3.0.1"
-    jszip "^3.6.0"
-    lit-connect-modal "^0.1.10"
-    lit-siwe "^1.1.8"
-    node-fetch "^3.2.3"
-    pako "^2.0.4"
-    tslib "^2.3.1"
-    tweetnacl "^1.0.3"
-    tweetnacl-util "^0.15.1"
-    utf-8-validate "^5.0.8"
-
-"@lit-protocol/sdk-browser@^1.1.241":
+"@lit-protocol/sdk-browser@^1.1.238", "@lit-protocol/sdk-browser@^1.1.241":
   version "1.1.241"
   resolved "https://registry.yarnpkg.com/@lit-protocol/sdk-browser/-/sdk-browser-1.1.241.tgz#a4ef74c2e2f1ad5dc9c12413318c6851bbefdf00"
   integrity sha512-xVk9cV3OVb4Q7Op81khh337fb21NuNWVnnVsLnZtVtCGf+XW6l9dcO7QLNIhe9ddQJZxObPEVU5/BZx+hzbHMg==

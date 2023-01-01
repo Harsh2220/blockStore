@@ -38,9 +38,7 @@ export default function App({ Component, pageProps }: AppProps) {
       <ConnectKitProvider>
         <LivepeerConfig client={client}>
           <ChakraProvider theme={theme}>
-            <GeneralProvider>
             <Component {...pageProps} />
-            </GeneralProvider>
           </ChakraProvider>
         </LivepeerConfig>
       </ConnectKitProvider>
