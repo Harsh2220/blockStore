@@ -1,4 +1,4 @@
-import { Box, Button, Container, Flex, Heading } from "@chakra-ui/react";
+import { Box, Button, Container, Flex, Heading, Img } from "@chakra-ui/react";
 import { InjectedConnector } from "wagmi/connectors/injected";
 import React from "react";
 import { useAccount, useConnect, useEnsName } from "wagmi";
@@ -13,7 +13,7 @@ export default function Navbar() {
     <Box bg="black">
       <Container maxW={"container.lg"}>
         <Flex justifyContent={"space-between"} alignItems="center" py={4}>
-          <Heading fontSize={"lg"}>Logo</Heading>
+          <Img src='block.png' alt='logo' boxSize={10} />
           <ConnectKitButton />
         </Flex>
       </Container>

@@ -7,8 +7,11 @@ import {
     Icon,
     Flex,
 } from "@chakra-ui/react";
+import { useRouter } from "next/router";
 
 export default function Hero() {
+
+    const router = useRouter();
     return (
         <Box h={"calc(100vh - 72px)"} backgroundImage={'hero.svg'} backgroundRepeat='no-repeat' backgroundAttachment={'fixed'} backgroundSize='cover'>
             <Flex px={8} py={24} mx="auto" alignItems={'center'} >
@@ -63,9 +66,9 @@ export default function Hero() {
                             mb={{ base: 2, sm: 0 }}
                             size="lg"
                             cursor="pointer"
-                        // onClick={() => {
-                        //     router.replace("/illustrations"),
-                        // }}
+                            onClick={() => {
+                                router.push("/explore");
+                            }}
                         >
                             Explore
                             <Icon boxSize={4} viewBox="0 0 20 20" fill="white" ml={2}>

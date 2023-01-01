@@ -66,8 +66,8 @@ export default function UploadVideo() {
     // for the returned data
     video
       ? {
-          sources: [{ name: video.name, file: video }] as const,
-        }
+        sources: [{ name: video.name, file: video }] as const,
+      }
       : null
   );
 
