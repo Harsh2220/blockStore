@@ -22,6 +22,7 @@ import { ethers } from "ethers";
 import { UnlockV11, PublicLockV11 } from "@unlock-protocol/contracts";
 import Navbar from "../components/Navbar";
 import orbis from "./orbis";
+import { useRouter } from "next/router";
 import abis from "@unlock-protocol/contracts";
 import create from "zustand";
 import { useStore } from "../components/lockedStore";
@@ -33,8 +34,8 @@ import {
   useWaitForTransaction,
   useContractRead,
   usePrepareContractWrite,
-  useSigner,
 } from "wagmi";
+import { Web3Storage } from "web3.storage";
 
 export default function UploadVideo() {
   const lockInterface = new ethers.utils.Interface(PublicLockV11.abi);
@@ -50,12 +51,10 @@ export default function UploadVideo() {
   const [enableDuration, setEnableDuration] = useState(false);
   const [enableSupply, setEnableSupply] = useState(false);
   const [video, setVideo] = useState<File | undefined>(undefined);
-  const [deployedUnlockAddress, setDeployedUnlockAddress] = useState();
-  const [publicLockAddress, setPublicLockAddress] = useState();
-  // const [publicLock, setPublicLock] = useState<any>();
-  // const [unlock, setUnlock] = useState<any>();
-  const userSigner = useSigner();
-  const { unlock, publicLock, setunlock, setPublicLock } = useStore();
+  const [thumbnail, setThumbnail] = useState<File | undefined>(undefined);
+  const [thumbnailAddr, setThumbnailAddr] = useState("");
+
+  const router = useRouter();
   const {
     mutate: createAsset,
     data: assets,
@@ -82,6 +81,10 @@ export default function UploadVideo() {
   const toast = useToast();
 
   const createService = async () => {
+    const client = new Web3Storage({ token: process.env.ACCESS_TOKEN });
+    client.put(thumbnail).then((cid: any) => {
+      setThumbnailAddr(`https://${cid}.ipfs.w3s.link/${files[0].name}`);
+    });
     createAsset?.();
   };
 
@@ -115,7 +118,11 @@ export default function UploadVideo() {
     }
   }
 
-  const prepareCalldata = async () => {
+  const prepareCalldata = async (
+    supply: number,
+    name: string,
+    price: number
+  ) => {
     setCalldata(
       lockInterface.encodeFunctionData(
         "initialize(address,uint256,address,uint256,uint256,string)",
@@ -141,7 +148,7 @@ export default function UploadVideo() {
     playbackId: string | undefined,
     description: string
   ) {
-    await prepareCalldata();
+    await prepareCalldata(supply, name, price);
     sendTransaction?.();
     await connect();
     let res = await orbis.createPost({
@@ -171,47 +178,28 @@ export default function UploadVideo() {
         isClosable: true,
       });
     }
-    prepareCalldata();
+    prepareCalldata(supply, name, price);
   }, [status, name, description, price, supply, duration]);
 
-  const unlockData = unlock;
-  const publicLockData = publicLock;
   useEffect(() => {
-    if (unlockData && publicLockData) {
-      const unlockAddress = unlockData.unlockAddress;
-      const publicLockAddress = publicLockData.publicLockAddress;
-      setDeployedUnlockAddress(unlockAddress);
-      setPublicLockAddress(publicLockAddress);
+    if (creator == null) {
+      alert("Please connect your wallet");
+      router.push("/");
     }
   }, []);
 
-  useEffect(() => {
-    const readyUnlock = () => {
-      let unlockContract;
-      let publicLockContract;
-      try {
-        if (deployedUnlockAddress) {
-          unlockContract = new ethers.Contract(
-            deployedUnlockAddress,
-            abis.UnlockV11.abi,
-            userSigner
-          );
-        }
-        if (publicLockAddress) {
-          publicLockContract = new ethers.Contract(
-            publicLockAddress,
-            abis.PublicLockV10.abi,
-            userSigner
-          );
-        }
-      } catch (e) {
-        console.log(e);
-      }
-      // setUnlock(unlockContract);
-      // setPublicLock(publicLockContract);
-    };
-    readyUnlock();
-  }, [creator]);
+  // useEffect(() => {
+  //   if (receipt) {
+  //     useContractEvent({
+  //       address: receipt.logs[0].address as string,
+  //       abi: PublicLockV11.abi,
+  //       eventName: "NewLock",
+  //       listener(...args) {
+  //         console.log(args);
+  //       },
+  //     });
+  //   }
+  // }, [receipt]);
 
   const progressFormatted = useMemo(
     () =>
@@ -360,33 +348,59 @@ export default function UploadVideo() {
                     ) : null}
                   </Flex>
                 </Box>
-                <Center w="full">
-                  <label
-                    htmlFor="video"
-                    style={{
-                      backgroundColor: "black",
-                      textAlign: "center",
-                      padding: "10px",
-                      fontWeight: "500",
-                      borderRadius: "4px",
-                      color: "white",
-                      cursor: "pointer",
-                      width: "100%",
-                    }}
-                  >
-                    Select a video
-                  </label>
-                  <input
-                    type="file"
-                    id="video"
-                    onChange={(e) => {
-                      if (e.target.files) {
-                        setVideo(e.target.files[0]);
-                      }
-                    }}
-                    style={{ display: "none" }}
-                  />
-                </Center>
+                <Box p={4} rounded="lg">
+                  <FormControl display="flex" alignItems="center" gap={4}>
+                    <label
+                      htmlFor="video"
+                      style={{
+                        backgroundColor: "black",
+                        textAlign: "center",
+                        padding: "10px",
+                        fontWeight: "500",
+                        borderRadius: "4px",
+                        color: "white",
+                        cursor: "pointer",
+                        width: "100%",
+                      }}
+                    >
+                      Select a video
+                    </label>
+                    <input
+                      type="file"
+                      id="video"
+                      onChange={(e) => {
+                        if (e.target.files) {
+                          setVideo(e.target.files[0]);
+                        }
+                      }}
+                      style={{ display: "none" }}
+                    />
+                    <label
+                      style={{
+                        backgroundColor: "black",
+                        textAlign: "center",
+                        padding: "10px",
+                        fontWeight: "500",
+                        borderRadius: "4px",
+                        color: "white",
+                        cursor: "pointer",
+                        width: "100%",
+                      }}
+                    >
+                      Select a thumbnail
+                    </label>
+                    <input
+                      type="file"
+                      id="video"
+                      onChange={(e) => {
+                        if (e.target.files) {
+                          setThumbnail(e.target.files[0]);
+                        }
+                      }}
+                      style={{ display: "none" }}
+                    />
+                  </FormControl>
+                </Box>
               </Stack>
               {progressFormatted && <Text my={2}>{progressFormatted}</Text>}
               <Button
@@ -396,7 +410,7 @@ export default function UploadVideo() {
                 bgGradient="linear(to-r, red.400,pink.400)"
                 color={"white"}
                 onClick={() => {
-                  createAsset?.();
+                  createService();
                 }}
                 _hover={{
                   bgGradient: "linear(to-r, red.400,pink.400)",
