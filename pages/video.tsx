@@ -35,7 +35,7 @@ import {
   useContractRead,
   usePrepareContractWrite,
 } from "wagmi";
-import { Web3Storage } from "web3.storage";
+import { Filelike, Web3Storage } from "web3.storage";
 
 export default function UploadVideo() {
   const lockInterface = new ethers.utils.Interface(PublicLockV11.abi);
@@ -81,10 +81,6 @@ export default function UploadVideo() {
   const toast = useToast();
 
   const createService = async () => {
-    const client = new Web3Storage({ token: process.env.ACCESS_TOKEN });
-    client.put(thumbnail).then((cid: any) => {
-      setThumbnailAddr(`https://${cid}.ipfs.w3s.link/${files[0].name}`);
-    });
     createAsset?.();
   };
 
@@ -159,7 +155,12 @@ export default function UploadVideo() {
         // creatorName:"Rahul"
         playbackID: playbackId,
       },
-
+      media: [
+        {
+          type: "image",
+          url: thumbnailAddr,
+        },
+      ],
       tags: [{ slug: "Test Tag", title: "Courses" }],
     });
     console.log("Created post:", res.doc);
@@ -375,29 +376,29 @@ export default function UploadVideo() {
                       }}
                       style={{ display: "none" }}
                     />
-                    <label
-                      style={{
-                        backgroundColor: "black",
-                        textAlign: "center",
-                        padding: "10px",
-                        fontWeight: "500",
-                        borderRadius: "4px",
-                        color: "white",
-                        cursor: "pointer",
-                        width: "100%",
-                      }}
-                    >
-                      Select a thumbnail
-                    </label>
-                    <input
+                    <Input
+                      borderColor={"gray.800"}
+                      _hover={{ borderColor: "blue.800", border: "2px" }}
+                      p={1}
+                      colorScheme="blue"
+                      variant="outline"
+                      w="full"
                       type="file"
-                      id="video"
-                      onChange={(e) => {
-                        if (e.target.files) {
-                          setThumbnail(e.target.files[0]);
-                        }
+                      accept="image/*"
+                      name="file"
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                        const files = (e.target as HTMLInputElement).files!;
+                        const client = new Web3Storage({
+                          token:
+                            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkaWQ6ZXRocjoweDkxZTRjOEMwNTJiMzkzNEQ3Nzc5NWM3QWQ3MkQ0MTFhMGQyMWUxODIiLCJpc3MiOiJ3ZWIzLXN0b3JhZ2UiLCJpYXQiOjE2NzE2ODYwNTU1NjIsIm5hbWUiOiJNYXRpYy1Qcm9maWxlIn0.zDWjIoqZUCnPXtvWXjm_ZbvPN2ZZHTfcK7JHdM2S7hk",
+                        });
+                        client.put(files).then((cid) => {
+                          console.log(cid);
+                          setThumbnailAddr(
+                            `https://${cid}.ipfs.w3s.link/${files[0].name}`
+                          );
+                        });
                       }}
-                      style={{ display: "none" }}
                     />
                   </FormControl>
                 </Box>
