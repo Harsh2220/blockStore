@@ -26,7 +26,6 @@ import { useRouter } from "next/router";
 import abis from "@unlock-protocol/contracts";
 import create from "zustand";
 import { useStore } from "../components/lockedStore";
-
 import {
   erc20ABI,
   useAccount,
@@ -53,6 +52,7 @@ export default function UploadVideo() {
   const [video, setVideo] = useState<File | undefined>(undefined);
   const [thumbnail, setThumbnail] = useState<File | undefined>(undefined);
   const [thumbnailAddr, setThumbnailAddr] = useState("");
+
 
   const router = useRouter();
   const {
@@ -154,16 +154,15 @@ export default function UploadVideo() {
         // unlockAddress:"0xc37ffe60f6c3830ed0e92939d41ad1ecf8fd46d9",
         // creatorName:"Rahul"
         playbackID: playbackId,
+        imageUrl: thumbnailAddr,
       },
-      media: [
-        {
-          type: "image",
-          url: thumbnailAddr,
-        },
-      ],
-      tags: [{ slug: "Test Tag", title: "Courses" }],
+      tags: [{ slug: "videos", title: "Courses" }],
     });
-    console.log("Created post:", res.doc);
+    console.log("Created post:", res.doc)
+    if(res.doc != null){
+      router.push("/explore");
+    }
+
     await getPost();
   }
 
@@ -175,7 +174,7 @@ export default function UploadVideo() {
         title:
           "Successfully created your service, please sign message to create post",
         status: "success",
-        duration: 5000,
+        duration: 9000,
         isClosable: true,
       });
     }
